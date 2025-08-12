@@ -25,7 +25,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
         const db = client.db("myPortfolio");
         const projectCollection = db.collection("projects");
@@ -33,6 +33,10 @@ async function run() {
         // GET all projects
         app.get("/projects", async (req, res) => {
             const projects = await projectCollection.find().toArray();
+            res.send(projects);
+        });
+        app.get("/projectsHome", async (req, res) => {
+            const projects = await projectCollection.find().sort({ _id: -1 }).limit(3).toArray();
             res.send(projects);
         });
         // GET Signle projects
@@ -54,8 +58,8 @@ async function run() {
         });
 
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        // await client.db("admin").command({ ping: 1 });
+        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
